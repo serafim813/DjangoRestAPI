@@ -117,7 +117,7 @@
 -	pip install django
 - pip install djangorestframework
 - pip install psycopg2
-3. В вашей базе данных нужно создать скрипт, в который нужно добавить всю информацию из case.sql 
+3. В вашей базе данных нужно создать скрипт, в который нужно добавить информацию из case.sql 
 4. Измените настройки соединения с сервером Postgres в файле config.py, в views.py в параметрах dsn нужно поменять dbname на ваше название базы данных
 5.	Запустите тестовый сервер
 -	python manage.py runserver 80
