@@ -13,15 +13,15 @@ dsn = {
     'host': config.host,
     'port': config.port
 }
+schema = config.schema
 
 @api_view(['GET', 'PUT', 'POST', 'DELETE'])
 def tutorial_detail(request, pk):
-    pk = 0
     result = re.match(r'^/api/v1/user/(?P<pk>[0-9]+)$', str(request).split("'")[1])
     if (request.method == 'GET') and (len(str(result)) != 4):
         with psycopg2.connect(**dsn) as conn, conn.cursor() as cursor:
             k = (str(request).split("'")[1]).split('/')[-1]
-            k = 'select * from test.user_get(' + k +')'
+            k = 'select * from '+ schema +'.user_get(' + k +')'
             cursor.execute(k)
             result = str(cursor.fetchone())
             result = result[1:-2]
@@ -33,7 +33,7 @@ def tutorial_detail(request, pk):
             k = (str(request).split("'")[1]).split('/')[-1]
             tutorial_data = JSONParser().parse(request)
             tutorial_data = str(tutorial_data).replace("'", '"')
-            k = 'select * from test.user_upd(' + k + ",'" + str(tutorial_data) + "')"
+            k = 'select * from '+ schema +'.user_upd(' + k + ",'" + str(tutorial_data) + "')"
             cursor.execute(k)
             result = str(cursor.fetchone())
             result = result[1:-2]
@@ -43,7 +43,7 @@ def tutorial_detail(request, pk):
     if (request.method == 'DELETE') and (len(str(result)) != 4):
         with psycopg2.connect(**dsn) as conn, conn.cursor() as cursor:
             k = (str(request).split("'")[1]).split('/')[-1]
-            k = 'select * from test.user_del(' + k +')'
+            k = 'select * from '+ schema +'.user_del(' + k +')'
             cursor.execute(k)
             result = str(cursor.fetchone())
             result = result[1:-2]
@@ -53,7 +53,7 @@ def tutorial_detail(request, pk):
     if (request.method == 'GET') and (len(str(result)) != 4):
         with psycopg2.connect(**dsn) as conn, conn.cursor() as cursor:
             k = (str(request).split("'")[1]).split('/')[-1]
-            k = 'select * from test.comment_get(' + k +')'
+            k = 'select * from '+ schema +'.comment_get(' + k +')'
             cursor.execute(k)
             result = str(cursor.fetchone())
             result = result[1:-2]
@@ -65,7 +65,7 @@ def tutorial_detail(request, pk):
         with psycopg2.connect(**dsn) as conn, conn.cursor() as cursor:
             k = (str(request).split("'")[1]).split('/')[-3]
             x = '0'
-            k = 'select * from test.user_comment_get(' + k + ', ' + x +')'
+            k = 'select * from '+ schema +'.user_comment_get(' + k + ', ' + x +')'
             cursor.execute(k)
             result = str(cursor.fetchone())
             result = result[2:-3]
@@ -77,7 +77,7 @@ def tutorial_detail(request, pk):
         with psycopg2.connect(**dsn) as conn, conn.cursor() as cursor:
             k = (str(request).split("'")[1]).split('/')[-3]
             x = (str(request).split("'")[1]).split('/')[-1]
-            k = 'select * from test.user_comment_get(' + k + ', ' + x +')'
+            k = 'select * from '+ schema +'.user_comment_get(' + k + ', ' + x +')'
             cursor.execute(k)
             result = str(cursor.fetchone())
             result = result[1:-2]
@@ -91,7 +91,7 @@ def tutorial_detail(request, pk):
             k = (str(request).split("'")[1]).split('/')[-3]
             tutorial_data = JSONParser().parse(request)
             tutorial_data = str(tutorial_data).replace("'",'"')
-            k = 'select * from test.user_comment_ins(' + k + ", '" + str(tutorial_data) + "')"
+            k = 'select * from '+ schema +'.user_comment_ins(' + k + ", '" + str(tutorial_data) + "')"
             cursor.execute(k)
             result = str(cursor.fetchone())
             result = result[1:-2]
@@ -103,12 +103,12 @@ def tutorial_detail(request, pk):
             tutorial_data = JSONParser().parse(request)
             tutorial_data = str(tutorial_data).replace("'", '"')
             k = (str(request).split("'")[1]).split('/')[-1]
-            t = 'select * from test.comment_get(' + k + ')'
+            t = 'select * from '+ schema +'.comment_get(' + k + ')'
             cursor.execute(t)
             result = str(cursor.fetchone())
             result = result[1:-2]
             result = result.split(' ')[3][:-1]
-            k = 'select * from test.comment_upd('+ result + ", " + k + ", '" + str(tutorial_data) + "')"
+            k = 'select * from '+ schema +'.comment_upd('+ result + ", " + k + ", '" + str(tutorial_data) + "')"
             cursor.execute(k)
             result = str(cursor.fetchone())
             result = result[1:-2]
@@ -118,12 +118,12 @@ def tutorial_detail(request, pk):
     if (request.method == 'DELETE') and (len(str(result)) != 4):
         with psycopg2.connect(**dsn) as conn, conn.cursor() as cursor:
             k = (str(request).split("'")[1]).split('/')[-1]
-            t = 'select * from test.comment_get(' + k + ')'
+            t = 'select * from '+ schema +'.comment_get(' + k + ')'
             cursor.execute(t)
             result = str(cursor.fetchone())
             result = result[1:-2]
             result = result.split(' ')[3][:-1]
-            k = 'select * from test.user_comment_del('+ result + ", " + k + ")"
+            k = 'select * from '+ schema +'.user_comment_del('+ result + ", " + k + ")"
             cursor.execute(k)
             result = str(cursor.fetchone())
             result = result[1:-2]
@@ -136,7 +136,7 @@ def tutorial_list(request):
     result = re.match(r'^/api/v1/user/comment/$', str(request).split("'")[1])
     if (request.method == 'GET') and (len(str(result)) != 4):
         with psycopg2.connect(**dsn) as conn, conn.cursor() as cursor:
-            k = 'select * from test.user_comment_get(0,0)'
+            k = 'select * from '+ schema +'.user_comment_get(0,0)'
             cursor.execute(k)
             result = str(cursor.fetchone())
             result = result[1:-2]
@@ -148,7 +148,7 @@ def tutorial_list(request):
         with psycopg2.connect(**dsn) as conn, conn.cursor() as cursor:
             tutorial_data = JSONParser().parse(request)
             tutorial_data = str(tutorial_data).replace("'",'"')
-            k = 'select * from test.user_ins('+"'" + str(tutorial_data) + "')"
+            k = 'select * from '+ schema +'.user_ins('+"'" + str(tutorial_data) + "')"
             cursor.execute(k)
             result = str(cursor.fetchone())
             result = result[1:-2]
