@@ -69,6 +69,18 @@
 
 ## 3. Примеры
 
+  - **POST localhost:80/api/v1/user/**<br>body: `{"name":"Vasya", "email":"vasya@google"}`
+    - Транслируется в: **select * from test.user_ins(`{"name":"Vasya", "email":"vasya@google"}`)**
+    - Физический смысл: Добавить нового пользователя
+    - Ответ сервиса: `{"id":15}`
+  - **PUT localhost:80/api/v1/user/15**<br>body: `{"name":"Vasya_", "email":"vasya@google"}`
+    - Транслируется в: **select * from test.user_upd(15, '{"name":"Vasya_", "email":"vasya@google"}')**
+    - Физический смысл: Изменить данные пользователя с ID 15
+    - Ответ сервиса: `{"id":15}`
+  - **DELETE localhost:80/api/v1/user/15** 
+    - Транслируется в: **select * from test.user_del(34452, 460)**
+    - Физический смысл: Удалить пользователя с ID 15
+    - Ответ сервиса: `{"id":15}`    
   - **GET localhost:80/api/v1/user/34452**   
     - Транслируется в: **select * from test.user_get(34452)**
     - Физический смысл: Получить данные по пользователю 34452
@@ -97,18 +109,7 @@
     - Транслируется в: **select * from test.user_comment_del(34452, 460)**
     - Физический смысл: Удалить комментарий с ID 460
     - Ответ сервиса: `{"id":460}`
-  - **POST localhost:80/api/v1/user/**<br>body: `{"name":"Vasya", "email":"vasya@google"}`
-    - Транслируется в: **select * from test.user_ins(`{"name":"Vasya", "email":"vasya@google"}`)**
-    - Физический смысл: Добавить нового пользователя
-    - Ответ сервиса: `{"id":15}`
-  - **PUT localhost:80/api/v1/user/15**<br>body: `{"name":"Vasya_", "email":"vasya@google"}`
-    - Транслируется в: **select * from test.user_upd(15, '{"name":"Vasya_", "email":"vasya@google"}')**
-    - Физический смысл: Изменить данные пользователя с ID 15
-    - Ответ сервиса: `{"id":15}`
-  - **DELETE localhost:80/api/v1/user/15** 
-    - Транслируется в: **select * from test.user_del(34452, 460)**
-    - Физический смысл: Удалить пользователя с ID 15
-    - Ответ сервиса: `{"id":15}`    
+
     
     #### Установка:
 1.	Склонируйте репозиторий 
