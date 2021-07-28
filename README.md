@@ -113,7 +113,7 @@
     
     #### Установка:
 1.	Склонируйте репозиторий 
-- git clone https://github.com/serafim813/djangoProject8.git
+- git clone https://github.com/serafim813/pythonProject5.git
 2.	Установите необходимые пакеты:
 -	pip install django
 - pip install djangorestframework
