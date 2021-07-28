@@ -1,21 +1,22 @@
 from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view
-
+from DjangoRestApisPostgreSQL import config
 import psycopg2
 import ast
 import re
 
 dsn = {
     'dbname': 'movies_database',
-    'user': 'postgres',
-    'password': 1234,
-    'host': '127.0.0.1',
-    'port': 5432
+    'user': config.user,
+    'password': config.password,
+    'host': config.host,
+    'port': config.port
 }
 
 @api_view(['GET', 'PUT', 'POST', 'DELETE'])
 def tutorial_detail(request, pk):
+    pk = 0
     result = re.match(r'^/api/v1/user/(?P<pk>[0-9]+)$', str(request).split("'")[1])
     if (request.method == 'GET') and (len(str(result)) != 4):
         with psycopg2.connect(**dsn) as conn, conn.cursor() as cursor:
@@ -37,23 +38,19 @@ def tutorial_detail(request, pk):
             result = ast.literal_eval(result)
         return JsonResponse(result)
 
-    result3 = re.match(r'^/api/v1/user/(?P<pk>[0-9]+)/comment/$', str(request).split("'")[1])
-    if (request.method == 'GET') and (len(str(result3)) != 4):
+    result = re.match(r'^/api/v1/user/(?P<pk>[0-9]+)/comment/$', str(request).split("'")[1])
+    if (request.method == 'GET') and (len(str(result)) != 4):
         with psycopg2.connect(**dsn) as conn, conn.cursor() as cursor:
             k = (str(request).split("'")[1]).split('/')[-3]
-            result3 = re.match(r'^(?P<pk>[0-9]+)$', (str(request).split("'")[1]).split('/')[-1])
-            #if len(str(result)) != 4:
             x = '0'
             k = 'select * from test.user_comment_get(' + k + ', ' + x +')'
             cursor.execute(k)
             result = str(cursor.fetchone())
             result = result[2:-3]
-            print(result)
             result = ast.literal_eval(result)
-            k = {"id":456, "id_user":34452, "txt":"My comment"},{"id":460, "id_user":34452, "txt":"Foo!"}
-            #querset = Tutorial.objects.filter(result)
         return JsonResponse(result, safe=False)
     result = re.match(r'^/api/v1/user/(?P<x>[0-9]+)/comment/(?P<pk>[0-9]+)$', str(request).split("'")[1])
+    print(request.method)
     if (request.method == 'GET') and (len(str(result)) != 4):
         with psycopg2.connect(**dsn) as conn, conn.cursor() as cursor:
             k = (str(request).split("'")[1]).split('/')[-3]
@@ -66,7 +63,7 @@ def tutorial_detail(request, pk):
         return JsonResponse(result)
 
 
-    result = re.match(r'^/api/v1/user/(?P<x>[0-9]+)/comment/$', str(request).split("'")[1])
+    result = re.match(r'^/api/v1/user/(?P<pk>[0-9]+)/comment/$', str(request).split("'")[1])
     if (request.method == 'POST') and (len(str(result)) != 4):
         with psycopg2.connect(**dsn) as conn, conn.cursor() as cursor:
             k = (str(request).split("'")[1]).split('/')[-3]
@@ -112,3 +109,14 @@ def tutorial_detail(request, pk):
         return JsonResponse(result)
 
 
+@api_view(['GET'])
+def tutorial_list(request):
+    result = re.match(r'^/api/v1/user/comment/$', str(request).split("'")[1])
+    if (request.method == 'GET') and (len(str(result)) != 4):
+        with psycopg2.connect(**dsn) as conn, conn.cursor() as cursor:
+            k = 'select * from test.comment_get(0,0)'
+            cursor.execute(k)
+            result = str(cursor.fetchone())
+            result = result[1:-2]
+            result = ast.literal_eval(result)
+        return JsonResponse(result, safe=False)
