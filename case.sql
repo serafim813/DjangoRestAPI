@@ -203,10 +203,6 @@ $BODY$
 language plpgsql volatile cost 100;
 
 
-
-
-
-
 create or replace function test.comment_upd(id1 integer, _id integer, _params json)
   returns json as
 $BODY$
@@ -223,12 +219,6 @@ begin
 end
 $BODY$
 language plpgsql volatile cost 100;
-
-
-
-
-
-
 
 
 
